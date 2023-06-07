@@ -1,5 +1,11 @@
 # Normalization in Deep Neural Networks
 
+Reference:
+
+[1] Ioffe, S. &amp; Szegedy, C.. (2015). Batch Normalization: Accelerating Deep Network Training by Reducing Internal Covariate Shift. *Proceedings of the 32nd International Conference on Machine Learning*, in *Proceedings of Machine Learning Research* 37:448-456 Available from [here](https://proceedings.mlr.press/v37/ioffe15.html).
+
+[2] Kevin Zakka's Blog. [*Deriving the Gradient for the Backward Pass of Batch Normalization*](https://kevinzakka.github.io/2016/09/14/batch_normalization/).
+
 ## Input-Level Normalization
 
 One issue of deep neural nets is that the learning capability of the network deteriorates as the network goes deeper due to vanishing or exploding gradients. Adding normalization layers provides a common remedy to this kind of problem by *standardizing the statistics of the hidden units* (zero mean & unit variance, also known as *whitening*). Specifically, for input feature set $\{ \mathbf{x}^{(i)} \}_{i = 1}^N$ with dimension $D$, i.e., $\mathbf{x}^{(i)} \in \mathbb{R}^D$, we have the "standardization" of the input features on dimension $j$ ($j$-th feature) can be represented as (the scaled feature will have zero mean and unit variance),
@@ -157,6 +163,8 @@ $$
 &= \frac{\partial \ell}{\partial \hat{\mathbf{x}}^{(i)}} \cdot \frac{1}{\sqrt{\boldsymbol{\sigma}_\mathcal{B}^2 + \epsilon}} + \frac{\partial \ell}{\partial \boldsymbol{\sigma}_\mathcal{B}^2} \cdot \frac{2 (\mathbf{x}^{(i)} - \boldsymbol{\mu}_\mathcal{B}^2)}{m} + \frac{\partial \ell}{\partial \boldsymbol{\mu}_\mathcal{B}} \cdot \frac{1}{m}\\
 &= \frac{\partial \ell}{\partial \mathbf{y}^{(i)}} \cdot \boldsymbol{\gamma} \cdot \frac{1}{\sqrt{\boldsymbol{\sigma}_\mathcal{B}^2 + \epsilon}} + \sum_{i=1}^m \frac{\partial \ell}{\partial \hat{\mathbf{x}}^{(i)}} \cdot \left( - \frac{1}{\sqrt{\boldsymbol{\sigma}_\mathcal{B}^2 + \epsilon}} \right) \cdot \frac{1}{m} + \\
 &\quad\quad \frac{\partial \ell}{\partial \hat{\mathbf{x}}^{(i)}} \cdot \left( - \frac{1}{2} \sum_{i=1}^m \hat{\mathbf{x}}^{(i)} \right) \cdot \frac{2 \hat{\mathbf{x}}^{(i)}}{m \cdot \sqrt{\boldsymbol{\sigma}_\mathcal{B}^2 + \epsilon}}\\
-&= \frac{1}{m\sqrt{\boldsymbol{\sigma}_\mathcal{B}^2 + \epsilon}} \cdot \left[ m \frac{\partial \ell}{\partial \hat{\mathbf{x}^{(i)}}} - \sum_{j=1}^m \frac{\partial \ell}{\partial \hat{\mathbf{x}}^{(j)}} - \hat{\mathbf{x}}^{(i)} \sum_{i=1}^m \frac{\partial \ell}{\partial \hat{\mathbf{x}}^{(j)}} \cdot \hat{\mathbf{x}}^{(j)} \right]
+&= \frac{1}{m\sqrt{\boldsymbol{\sigma}_\mathcal{B}^2 + \epsilon}} \cdot \left[ m \frac{\partial \ell}{\partial \hat{\mathbf{x}}^{(i)}} - \sum_{j=1}^m \frac{\partial \ell}{\partial \hat{\mathbf{x}}^{(j)}} - \hat{\mathbf{x}}^{(i)} \sum_{i=1}^m \frac{\partial \ell}{\partial \hat{\mathbf{x}}^{(j)}} \cdot \hat{\mathbf{x}}^{(j)} \right] \\
+&= \frac{\boldsymbol{\gamma}}{m\sqrt{\boldsymbol{\sigma}_\mathcal{B}^2 + \epsilon}} \cdot \left[ m \frac{\partial \ell}{\partial \hat{\mathbf{y}}^{(i)}} - \sum_{j=1}^m \frac{\partial \ell}{\partial \hat{\mathbf{y}}^{(j)}} - \hat{\mathbf{x}}^{(i)} \sum_{i=1}^m \frac{\partial \ell}{\partial \hat{\mathbf{y}}^{(j)}} \cdot \hat{\mathbf{x}}^{(j)} \right],
 \end{aligned}
 $$
+where $\{\partial \ell / \partial \mathbf{y}^{(i)}\}_{i=1}^m$ are available as the function parameter.
