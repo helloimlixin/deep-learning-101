@@ -3,16 +3,20 @@
 ## Input-Level Normalization
 
 One issue of deep neural nets is that the learning capability of the network deteriorates as the network goes deeper due to vanishing or exploding gradients. Adding normalization layers provides a common remedy to this kind of problem by *standardizing the statistics of the hidden units* (zero mean & unit variance, also known as *whitening*). Specifically, for input feature set $\{ \mathbf{x}^{(i)} \}_{i = 1}^N$ with dimension $D$, i.e., $\mathbf{x}^{(i)} \in \mathbb{R}^D$, we have the "standardization" of the input features on dimension $j$ ($j$-th feature) can be represented as (the scaled feature will have zero mean and unit variance),
+
 $$
 \hat{x}^{(i)}_j = \frac{x^{(i)}_j - \mu_j}{\sigma_j},
 $$
+
 where,
+
 $$
 \begin{aligned}
 \mu_j &= \frac{1}{N} \sum_{i = 1}^N x_j^{(i)} \\
 \sigma_j^2 &= \frac{1}{N} \sum_{i = 1}^N (x^{(i)}_j - \mu_j)^2
 \end{aligned}
 $$
+
 Normalization also helps reduce the impact from features of different scales, as we are applying the same learning rate for all weight parameters, so large parameters will dominate the weight updates while using stochastic gradient descent algorithms.
 
 ## Extending Input Normalization to the Hidden Layers --- Batch Normalization
