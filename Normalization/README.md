@@ -80,11 +80,11 @@ as the *Batch Normalization Transform*, which can be performed in the following 
 >
 > $\boldsymbol{\sigma}_\mathcal{B}^2 \gets \frac{1}{m} \sum_{i=1}^m (\mathbf{x}_i - \mu_\mathcal{B})^2$ // mini-batch variance
 >
-> $\hat{\mathbf{x}}_i \gets \frac{\mathbf{x}_i - \boldsymbol{\mu}_\mathcal{B}}{\sqrt{\boldsymbol{\sigma}_\mathcal{B}^2 + \epsilon}}$ // normalize, where $\epsilon$ is a small constant for numerical stability, say $1e-5$
+> $\hat{\mathbf{x}}_i \gets \frac{\mathbf{x}_i - \boldsymbol{\mu}_\mathcal{B}}{\sqrt{\boldsymbol{\sigma}_\mathcal{B}^2 + \epsilon}}$ // normalization / whitening
 >
 > $\mathbf{y}_i \gets \boldsymbol{\gamma} \odot \hat{\mathbf{x}}_i + \boldsymbol{\beta} \equiv \mathtt{BN}_{\boldsymbol{\gamma}, \boldsymbol{\beta}} (\mathbf{x}_i)$ // scale and shift
 
-where $\odot$ denotes the Hadamard product. Note that here the parameter $\boldsymbol{\gamma}$ controls the spread or scale and the parameter $\boldsymbol{\beta}$ controls the mean, which also makes the original bias terms in the network redundant. Since the transformation is differentiable, we can easily pass the gradients back to the input of the layer and to the batch normalization parameters $\boldsymbol{\gamma}$ and $\boldsymbol{\beta}$. Specifically, we have during the backpropagation (not simplified),
+where $\epsilon$ is a small constant for numerical stability, say $1e-5$ and $\odot$ denotes the Hadamard product. Note that here the parameter $\boldsymbol{\gamma}$ controls the spread or scale and the parameter $\boldsymbol{\beta}$ controls the mean, which also makes the original bias terms in the network redundant. Since the transformation is differentiable, we can easily pass the gradients back to the input of the layer and to the batch normalization parameters $\boldsymbol{\gamma}$ and $\boldsymbol{\beta}$. Specifically, we have during the backpropagation (not simplified),
 
 $$
 \begin{aligned}
