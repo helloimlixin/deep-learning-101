@@ -48,6 +48,7 @@ Internal Covariate Shift refers to scenario when the layer input distribution ch
 ## Chain Rule Primer
 
 Suppose we have a function $u(x, y)$ where $x(r, t)$ and $y(r, t)$ are also two functions. Then to compute $\frac{\partial u}{\partial r}$ and $\frac{\partial u}{\partial t}$ we apply the chain rule,
+
 $$
 \begin{aligned}
 \frac{\partial u}{\partial r} &= \frac{\partial u}{\partial x} \cdot \frac{\partial x}{\partial r} + \frac{\partial u}{\partial y} \cdot \frac{\partial y}{\partial r} \\
