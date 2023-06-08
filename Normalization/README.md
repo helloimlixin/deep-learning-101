@@ -80,7 +80,7 @@ as the *Batch Normalization Transform*, which can be performed in the following 
 >
 > $\boldsymbol{\sigma}_\mathcal{B}^2 \gets \frac{1}{m} \sum_{i=1}^m (\mathbf{x}_i - \mu_\mathcal{B})^2$ // mini-batch variance
 >
-> $\hat{\mathbf{x}}_i \gets \frac{\mathbf{x}_i - \boldsymbol{\mu}_\mathcal{B}}{\sqrt{\boldsymbol{\sigma}_\mathcal{B}^2 + \epsilon}}$ // normalize, $\epsilon$ is a small constant for numerical stability, say $1e-5$
+> $\hat{\mathbf{x}}_i \gets \frac{\mathbf{x}_i - \boldsymbol{\mu}_\mathcal{B}}{\sqrt{\boldsymbol{\sigma}_\mathcal{B}^2 + \epsilon}}$ // normalize, where $\epsilon$ is a small constant for numerical stability, say $1e-5$
 >
 > $\mathbf{y}_i \gets \boldsymbol{\gamma} \odot \hat{\mathbf{x}}_i + \boldsymbol{\beta} \equiv \mathtt{BN}_{\boldsymbol{\gamma}, \boldsymbol{\beta}} (\mathbf{x}_i)$ // scale and shift
 
