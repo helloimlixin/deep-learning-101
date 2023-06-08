@@ -13,15 +13,15 @@ Reference:
 One issue of deep neural nets is that the learning capability of the network deteriorates as the network goes deeper due to vanishing or exploding gradients. Adding normalization layers provides a common remedy to this kind of problem by *standardizing the statistics of the hidden units* (zero mean & unit variance, also known as *whitening*). Specifically, for input feature set $\{ \mathbf{x}_i \}_{i = 1}^N$ with dimension $D$, i.e., $\mathbf{x}_i \in \mathbb{R}^D$, we have the "standardization" of the input features on dimension $j$ ($j$-th feature) can be represented as (the scaled feature will have zero mean and unit variance),
 
 $$
-\hat{x}_i_j = \frac{x_i_j - \mu_j}{\sigma_j},
+\hat{x}_{i,j} = \frac{x_{i,j} - \mu_j}{\sigma_j},
 $$
 
 where,
 
 $$
 \begin{aligned}
-\mu_j &= \frac{1}{N} \sum_{i = 1}^N x_j_i \\
-\sigma_j^2 &= \frac{1}{N} \sum_{i = 1}^N (x_i_j - \mu_j)^2
+\mu_j &= \frac{1}{N} \sum_{i = 1}^N x_{j, i} \\
+\sigma_j^2 &= \frac{1}{N} \sum_{i = 1}^N (x_{i, j} - \mu_j)^2
 \end{aligned}
 $$
 
