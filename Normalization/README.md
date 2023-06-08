@@ -179,7 +179,7 @@ $$
 \end{aligned}
 $$
 
-Finally we derive the partial for $\mathbf{x}$, which is a function of variables $\hat{\mathbf{x}}$, $\boldsymbol{\mu}_\mathcal{B}$, and $\boldsymbol{\sigma}_\mathcal{B}^2$,
+Finally we derive the partial for $\mathbf{x}$, which is a function of variables $\hat{\mathbf{x}}$, $\boldsymbol{\mu}_\mathcal{B}$, and $\boldsymbol{\sigma}_\mathcal{B}^2$, as follows,
 
 $$
 \begin{aligned}
