@@ -76,6 +76,7 @@ as the *Batch Normalization Transform*, which can be performed in the following 
 > $\mathbf{y}^{(i)} \gets \boldsymbol{\gamma} \odot \hat{\mathbf{x}}^{(i)} + \boldsymbol{\beta} \equiv \mathtt{BN}_{\boldsymbol{\gamma}, \boldsymbol{\beta}} (\mathbf{x}^{(i)})$ // scale and shift
 
 Note that here the parameter $\boldsymbol{\gamma}$ controls the spread or scale and the parameter $\boldsymbol{\beta}$ controls the mean, which also makes the original bias terms in the network redundant. Since the transformation is differentiable, we can easily pass the gradients back to the input of the layer and to the batch normalization parameters $\boldsymbol{\gamma}$ and $\boldsymbol{\beta}$. Specifically, we have during the backpropagation (not simplified),
+
 $$
 \begin{aligned}
 \frac{\partial \ell}{\partial \hat{\mathbf{x}}^{(i)}} &= \frac{\partial \ell}{\partial \mathbf{y}^{(i)}} \odot \boldsymbol{\gamma} \\
@@ -90,53 +91,75 @@ $$
 ### Derivations
 
 We first express the forward pass in the diagram below, for a mini-batch $\mathcal{B} = \{ \mathbf{x}^{(i)} \}_{i=1}^m$, we have
-$$\mathbf{x} \to \hat{\mathbf{x}}(\boldsymbol{\mu}_\mathcal{B}, \boldsymbol{\sigma}_\mathcal{B}^2, \mathbf{x}) \to \mathbf{y}(\hat{\mathbf{x}}, \boldsymbol{\gamma}, \boldsymbol{\beta}) \to \ell(\bold{y}),$$
+
+$$
+\mathbf{x} \to \hat{\mathbf{x}}(\boldsymbol{\mu}_\mathcal{B}, \boldsymbol{\sigma}_\mathcal{B}^2, \mathbf{x}) \to \mathbf{y}(\hat{\mathbf{x}}, \boldsymbol{\gamma}, \boldsymbol{\beta}) \to \ell(\bold{y}),
+$$
+
 hence the backward pass can be expressed as,
-$$\ell (\mathbf{y}) \to \mathbf{y}(\hat{\mathbf{x}}, \boldsymbol{\gamma}, \boldsymbol{\beta}) \to \hat{\mathbf{x}} (\boldsymbol{\mu}_\mathcal{B}, \boldsymbol{\sigma}_\mathcal{B}^2, \mathbf{x})$$
+
+$$
+\ell (\mathbf{y}) \to \mathbf{y}(\hat{\mathbf{x}}, \boldsymbol{\gamma}, \boldsymbol{\beta}) \to \hat{\mathbf{x}} (\boldsymbol{\mu}_\mathcal{B}, \boldsymbol{\sigma}_\mathcal{B}^2, \mathbf{x})
+$$
 
 First we have $\frac{\partial \ell}{\partial \mathbf{y}^{(i)}}$ available as the upstream derivative, which is given in the function parameter.
 
 Then to compute $\mathbf{y}(\hat{\mathbf{x}}, \boldsymbol{\gamma}, \boldsymbol{\beta})$, which consists of three variables, we first compute the gradients with respect to each variable,
+
 $$
 \begin{aligned}
     \frac{\partial \ell}{\partial \bold{\gamma}} &= \frac{\partial \ell}{\partial \mathbf{y}^{(i)}} \cdot \frac{\partial \mathbf{y}^{(i)}}{\partial \boldsymbol{\gamma}} \\
     &= \sum_{i=1}^m \frac{\partial \ell}{\partial \mathbf{y}^{(i)}} \cdot \hat{\mathbf{x}}^{(i)},
 \end{aligned}
 $$
+
 the summation indicates the computation is for the batches. As for $\boldsymbol{\beta}$ we have,
+
 $$
 \begin{aligned}
     \frac{\partial \ell}{\partial \boldsymbol{\beta}} &= \frac{\partial \ell}{\partial \mathbf{y}^{(i)}} \cdot \frac{\partial \mathbf{y}^{(i)}}{\partial \boldsymbol{\beta}} \\
     &= \sum_{i=1}^m \frac{\partial \ell}{\partial \mathbf{y}^{(i)}},
 \end{aligned}
 $$
+
 and finally $\hat{\mathbf{x}}^{(i)}$,
+
 $$
 \begin{aligned}
     \frac{\partial \ell}{\partial \hat{\mathbf{x}}^{(i)}} &= \frac{\partial \ell}{\partial \mathbf{y}^{(i)}} \cdot \frac{\partial \mathbf{y}^{(i)}}{\partial \hat{\mathbf{x}}^{(i)}} \\
     &= \frac{\partial \ell}{\partial \mathbf{y}^{(i)}} \odot \boldsymbol{\gamma}
 \end{aligned}
 $$
+
 To compute the gradient with respect to $\mathbf{x}^{(i)}$, we have since $\boldsymbol{\mu}$ and $\boldsymbol{\sigma}^2$ is a function of $\boldsymbol{\mu}$,
+
 $$
 \frac{\partial \ell}{\partial \bold{\mu}_\mathcal{B}} = \frac{\partial \ell}{\partial \hat{\mathbf{x}}^{(i)}} \cdot \frac{\partial \hat{\mathbf{x}}^{(i)}}{\partial \boldsymbol{\mu}_\mathcal{B}} + \frac{\partial \ell}{\partial \boldsymbol{\sigma}_\mathcal{B}^2} \cdot \frac{\partial \boldsymbol{\sigma}^2_\mathcal{B}}{\partial \boldsymbol{\mu}_\mathcal{B}},
 $$
+
 we have,
+
 $$
 \frac{\partial \hat{\mathbf{x}}^{(i)}}{\partial \boldsymbol{\mu}_\mathcal{B}} = -\frac{1}{\sqrt{\boldsymbol{\sigma}_\mathcal{B}^2 + \epsilon}},
 $$
+
 and,
+
 $$
 \frac{\partial \boldsymbol{\sigma}_\mathcal{B}^2}{\partial \boldsymbol{\mu}_\mathcal{B}} = -\frac{1}{m} \sum_{i=1}^m 2 \cdot (\boldsymbol{x}^{(i)} - \boldsymbol{\mu}_\mathcal{B}).
 $$
+
 Next we compute the partial,
+
 $$
 \begin{aligned}
 \frac{\partial \ell}{\partial \boldsymbol{\sigma}_\mathcal{B}^2} &= \frac{\partial \ell}{\partial \hat{\mathbf{x}}} \cdot \frac{\partial \hat{\mathbf{x}}}{\partial \boldsymbol{\sigma}_\mathcal{B}^2} \\
 &= \frac{\partial \ell}{\partial \hat{\mathbf{x}}} \cdot \left( - \frac{1}{2} \sum_{i=1}^m \frac{\mathbf{x}^{(i)} - \boldsymbol{\mu}_\mathcal{B}}{(\boldsymbol{\sigma}_\mathcal{B}^2 + \epsilon)^{3/2}} \right).
 \end{aligned}
 $$
+
 Thus we have,
+
 $$
 \begin{aligned}
     \frac{\partial \ell}{\partial \boldsymbol{\mu}_\mathcal{B}} &= \frac{\partial \ell}{\partial \hat{\mathbf{x}}} \cdot \frac{\partial \hat{\mathbf{x}}}{\partial \boldsymbol{\mu}_\mathcal{B}} + \frac{\partial \ell}{\partial \boldsymbol{\sigma}_\mathcal{B}^2} \cdot \frac{\partial \boldsymbol{\sigma}^2_\mathcal{B}}{\partial \boldsymbol{\mu}_\mathcal{B}}\\
@@ -146,7 +169,9 @@ $$
     &= \sum_{i=1}^m \frac{\partial \ell}{\partial \hat{\mathbf{x}}^{(i)}} \cdot \left( - \frac{1}{\sqrt{\boldsymbol{\sigma}_\mathcal{B}^2 + \epsilon}} \right).
 \end{aligned}
 $$
+
 Finally we derive the partial for $\mathbf{x}$, which is a function of variables $\hat{\mathbf{x}}$, $\boldsymbol{\mu}_\mathcal{B}$, and $\boldsymbol{\sigma}_\mathcal{B}^2$,
+
 $$
 \begin{aligned}
 \frac{\partial \ell}{\partial \mathbf{x}^{(i)}} &= \frac{\partial \ell}{\partial \hat{\mathbf{x}}^{(i)}} \cdot \frac{\partial \hat{\mathbf{x}}^{(i)}}{\partial \mathbf{x}^{(i)}} + \frac{\partial \ell}{\partial \boldsymbol{\mu}_\mathcal{B}} \cdot \frac{\partial \boldsymbol{\mu}_\mathcal{B}}{\partial \mathbf{x}^{(i)}} + \frac{\partial \ell}{\partial \boldsymbol{\sigma}_\mathcal{B}^2} \cdot \frac{\partial \boldsymbol{\sigma}_\mathcal{B}^2}{\partial \mathbf{x}^{(i)}} \\
@@ -157,11 +182,15 @@ $$
 &\quad\quad \frac{\partial \ell}{\partial \hat{\mathbf{x}}^{(i)}} \cdot \left( - \frac{1}{2} \sum_{i=1}^m \frac{\mathbf{x}^{(i)} - \boldsymbol{\mu}_\mathcal{B}}{\sqrt{\boldsymbol{\sigma}_\mathcal{B}^2 + \epsilon}} \right) \cdot \frac{2 (\mathbf{x}^{(i)} - \boldsymbol{\mu}_\mathcal{B})}{\sqrt{\boldsymbol{\sigma}_\mathcal{B}^2 + \epsilon}} \cdot \frac{1}{m \cdot \sqrt{\boldsymbol{\sigma}_\mathcal{B}^2 + \epsilon}},
 \end{aligned}
 $$
+
 also note that,
+
 $$
 \hat{\mathbf{x}}^{(i)} = \frac{\mathbf{x}^{(i)} - \boldsymbol{\mu}_\mathcal{B}}{\sqrt{\boldsymbol{\sigma}_\mathcal{B}^2 + \epsilon}},
 $$
+
 we have,
+
 $$
 \begin{aligned}
 \frac{\partial \ell}{\partial \mathbf{x}^{(i)}} &= \frac{\partial \ell}{\partial \hat{\mathbf{x}}^{(i)}} \cdot \frac{\partial \hat{\mathbf{x}}^{(i)}}{\partial \mathbf{x}^{(i)}} + \frac{\partial \ell}{\partial \boldsymbol{\mu}_\mathcal{B}} \cdot \frac{\partial \boldsymbol{\mu}_\mathcal{B}}{\partial \mathbf{x}^{(i)}} + \frac{\partial \ell}{\partial \boldsymbol{\sigma}_\mathcal{B}^2} \cdot \frac{\partial \boldsymbol{\sigma}_\mathcal{B}^2}{\partial \mathbf{x}^{(i)}} \\
@@ -172,4 +201,5 @@ $$
 &= \frac{m \frac{\partial \ell}{\partial \hat{\mathbf{y}}^{(i)}} - \sum_{j=1}^m \frac{\partial \ell}{\partial \hat{\mathbf{y}}^{(j)}} - \hat{\mathbf{x}}^{(i)} \sum_{i=1}^m \frac{\partial \ell}{\partial \hat{\mathbf{y}}^{(j)}} \cdot \hat{\mathbf{x}}^{(j)}}{m\sqrt{\boldsymbol{\sigma}_\mathcal{B}^2 + \epsilon}} \odot \boldsymbol{\gamma},
 \end{aligned}
 $$
+
 where $\{\partial \ell / \partial \mathbf{y}^{(i)}\}_{i=1}^m$ are available as the function parameter.
