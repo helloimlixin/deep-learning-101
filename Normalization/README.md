@@ -37,9 +37,16 @@ However, normalizing the inputs only affects the first hidden layer, to standard
 - Can be understood as additional (normalization) layers (with additional parameters).
 
 When the input distribution to a learning system changes, it is said to experience *covariate shift*, furthermore, the idea of covariate shift can be extended to part of the learning system, such as a layer of the network. Consider the computation on the second layer of a neural network with input $u$
-$$\ell = F_2 (F_1 (u, \Theta_1), \Theta_2),$$
+
+$$
+\ell = F_2 (F_1 (u, \Theta_1), \Theta_2),
+$$
+
 where $F_1$ and $F_2$ are arbitrary network activation functions, and the parameters $\Theta_1, \Theta_2$ are to be learned to minimize the loss $\ell$. While using Stochastic Gradient Descent (SGD) methods, the training proceeds in minibatches, i.e., for the training set $\{ \mathbf{x}^{(i)}\}_{i=1}^N$, at each training step we consider a minibatch $\{ \mathbf{x}^{(i)} \}_{i=1}^m$, denote the learning rate as $\alpha$, we then have for a gradient descent step, the parameter update rule for $\Theta_2$ can be expressed as,
-$$\Theta_2 \gets \Theta_2 - \frac{\alpha}{m} \sum_{i=1}^m \frac{\partial F_2 (\mathbf{x}^{(i)}, \Theta_2)}{\partial \Theta_2}$$
+
+$$
+\Theta_2 \gets \Theta_2 - \frac{\alpha}{m} \sum_{i=1}^m \frac{\partial F_2 (\mathbf{x}^{(i)}, \Theta_2)}{\partial \Theta_2}
+$$
 
 ### Understanding Internal Covariate Shift
 
