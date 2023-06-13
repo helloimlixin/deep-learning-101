@@ -68,6 +68,7 @@ $$
 Consider a mini-batch $\mathcal{B} = \{ \mathbf{x}_i \}_{i = 1}^m$, denote the normalized values as $\{ \hat{\mathbf{x}}_i\}_{i=1}^m$ and the corresponding linear transformation as $\{\mathbf{y}_i\}_{i=1}^m$, we refer to the transform,
 $$\mathtt{BN}_{\boldsymbol{\gamma}, \boldsymbol{\beta}}: \{ \mathbf{x}_i \}_{i = 1}^m \to \{\mathbf{y}_i\}_{i=1}^m$$
 as the *Batch Normalization Transform*, which can be performed in the following steps,
+
 > **procedure 1**
 > 
 > **Input**: values of $\mathbf{x}$ over a mini-batch: $\mathcal{B} = \{ \mathbf{x}_i \}_{i = 1}^m$;
@@ -250,4 +251,3 @@ where $\boldsymbol{\beta}$ makes the requirement for the bias term in the activa
 > 11. > In the batch-normalized network $N_\mathtt{BN}^\mathtt{inf}$, replace the transform $y = \mathtt{BN}_{\boldsymbol{\gamma}, \boldsymbol{\beta}} (\mathbf{x})$ with $\mathbf{y} = \frac{\boldsymbol{\gamma}}{\sqrt{\mathrm{Var}[\mathbf{x}] + \epsilon}} \cdot \mathbf{x} + \left( \boldsymbol{\beta} - \frac{\boldsymbol{\gamma} \mathbb{E}[\mathbf{x}]}{\sqrt{\mathrm{Var}[\mathbf{x}] + \epsilon}} \right)$
 >
 > 12. **end for**
->
