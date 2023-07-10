@@ -3,10 +3,10 @@ import albumentations as A
 from albumentations.pytorch import ToTensorV2
 
 DEVICE = "cuda:0" if torch.cuda.is_available() else "cpu"
-TRAIN_DIR = "data/maps/train"
-VAL_DIR = "data/maps/val"
-# TRAIN_DIR = "data/maps/overfit-1"
-# VAL_DIR = "data/maps/overfit-1"
+# TRAIN_DIR = "data/maps/train"
+# VAL_DIR = "data/maps/val"
+TRAIN_DIR = "data/maps/overfit-1"
+VAL_DIR = "data/maps/overfit-1"
 LEARNING_RATE = 2e-4
 BATCH_SIZE = 64
 NUM_WORKERS = 4
