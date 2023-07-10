@@ -11,7 +11,7 @@ from tqdm import tqdm
 
 
 def train_fn(
-    disc, gen, loader, opt_disc, opt_gen, l1loss, bce, disc_scaler, gen_scaler
+    disc, gen, loader, opt_disc, opt_gen, bce, l1loss, disc_scaler, gen_scaler
 ):
     loop = tqdm(loader, leave=True)
 
@@ -107,7 +107,7 @@ def main():
     disc_scaler = torch.cuda.amp.GradScaler()  # gradient scaler initialization
     val_dataset = MapDataset(root_dir=config.VAL_DIR)  # dataset initialization
     val_loader = DataLoader(
-        val_dataset, batch_size=1, shuffle=False
+        val_dataset, batch_size=4, shuffle=False
     )  # dataloader initialization
 
     for epoch in range(config.NUM_EPOCHS):
@@ -123,11 +123,12 @@ def main():
             gen_scaler,
         )
 
-        if config.SAVE_MODEL and epoch % 10 == 0:
+        if config.SAVE_MODEL and epoch % 100 == 0:
             save_checkpoint(gen, opt_gen, filename=config.CHECKPOINT_GEN)
             save_checkpoint(disc, opt_disc, filename=config.CHECKPOINT_DISC)
 
         save_some_examples(gen, val_loader, epoch, folder="evaluation")
+
         print(f"Epoch {epoch} completed")
 
 

@@ -1,7 +1,8 @@
 from PIL import Image
 import numpy as np
 import os
-from torch.utils.data import Dataset
+from torch.utils.data import Dataset, DataLoader
+from torchvision.utils import save_image
 import config
 
 
@@ -16,7 +17,7 @@ class MapDataset(Dataset):
     def __getitem__(self, index):
         img_file = self.list_files[index]
         img_path = os.path.join(self.root_dir, img_file)
-        image = np.array(Image.open(img_path).convert("RGB"))
+        image = np.array(Image.open(img_path))
         input_image = image[
             :, :600, :
         ]  # 600 is the width of the image, first dimension is the channel dimension
@@ -29,3 +30,15 @@ class MapDataset(Dataset):
         target_image = config.transform_only_target(image=target_image)["image"]
 
         return input_image, target_image
+
+if __name__ == "__main__":
+    dataset = MapDataset("data/maps/train")
+    loader = DataLoader(dataset, batch_size=5)
+    for x, y in loader:
+        print(x.shape)
+        print(y.shape)
+        save_image(x, "x.png")
+        save_image(y, "y.png")
+        import sys
+        
+        sys.exit()
